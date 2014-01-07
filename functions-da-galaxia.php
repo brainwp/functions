@@ -139,4 +139,61 @@ function redireciona_non_admin_users() {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Filtro para adicionar CSS a todas as aparições de uma palavra ou frase
+ */
+function filter_nomedofiltro( $content ) {
+	$string = array(' Solid ');
+	$string2 = array(' Solid.');
+	$string3 = array(' Solid,');
+	$content = str_ireplace( $string, '<span style=color:#244c78;font-weight:bold;"> Solid </span>', $content );
+	$content = str_ireplace( $string2, '<span style=color:#244c78;font-weight:bold;"> Solid.</span>', $content );
+	$content = str_ireplace( $string3, '<span style=color:#244c78;font-weight:bold;"> Solid,</span>', $content );
+	return $content;
+}
+
+add_filter( 'the_content', 'filter_nomedofiltro' );
+add_filter( 'the_excerpt', 'filter_nomedofiltro' );
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// FILTRO PARA TROCAR CERTAS PALAVRAS POR LINKS
+
+function replace_text_wps($text){
+	$replace = array(
+	// 'WORD TO REPLACE' => 'REPLACE WORD WITH THIS'
+	' wordpress.org ' => ' <a href="http://br.wordpress.org">Wordpress</a> '
+	);
+	$text = str_replace(array_keys($replace), $replace, $text);
+	return $text;
+}
+
+add_filter('the_content', 'replace_text_wps');
+add_filter('the_excerpt', 'replace_text_wps');
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Mostrar Mensagem de urgência no Painel de Controle
+
+function showMessage($message, $errormsg = false)
+{
+	if ($errormsg) {
+		echo '<div id="message" class="updated fade">';
+	}
+	else {
+		echo '<div id="message" class="error">';
+	}
+	echo "<p>$message</p></div>";
+} 
+
+function showAdminMessages()
+{
+    showMessage("Esta &eacute; a nova vers&atilde;o (0.9) do Portal Maracatu.org.br, a principal instabilidade nesse momento &eacute; o plugin Slickr Flickr. Escreva para suporte@maracatu.org.br para ajuda.
+	<!-- Mensagem de alerta no Painel Administrativo de todos os sites do Maracatu.org.br -->", true);
+}
+add_action('admin_notices', 'showAdminMessages');
+
 ?>
