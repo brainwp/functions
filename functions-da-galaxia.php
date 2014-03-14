@@ -196,4 +196,30 @@ function showAdminMessages()
 }
 add_action('admin_notices', 'showAdminMessages');
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Cria página automaticamente ao ativer o tema.
+ * Testado em WP 3.8.1
+ */
+if (isset($_GET['activated']) && is_admin()){
+	$page_title = 'Página Automática';
+	$page_content = 'Adicione aqui, caso deseje que a página seja criada com algo no content';
+	$page_template = 'page-automatica.php'; // Caso não queira um page template, apague essa linha.
+	$page_check = get_page_by_title( $page_title );
+	$page = array(
+			'post_type' => 'page',
+			'post_title' => $page_title,
+			'post_content' => $page_content,
+			'post_status' => 'publish',
+			'post_author' => 1,
+	);
+	if(!isset( $page_check->ID )){
+		$page_id = wp_insert_post( $page );
+		if( !empty( $page_template ) ){
+				update_post_meta( $page_id, '_wp_page_template', $page_template );
+		}
+	}
+}
+
 ?>
