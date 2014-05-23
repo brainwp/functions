@@ -247,3 +247,21 @@ function posts_custom_id_columns( $column_name, $id ) {
                 echo $id;
     }
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/** Remove menus do admin **/
+function remove_menus () {
+global $menu;
+	$restricted = array(__('Links'), __('Pages'), __('Tools'), __('Users'), __('Settings'), __('Comments'));
+	end ($menu);
+	while (prev($menu)){
+		$value = explode(' ',$menu[key($menu)][0]);
+		if(in_array($value[0] != NULL?$value[0]:"" , $restricted)){unset($menu[key($menu)]);}
+	}
+}
+
+/** Adiciona contagem de anexos nos posts **/
+add_action('admin_menu', 'remove_menus');
