@@ -273,6 +273,11 @@ add_action('admin_menu', 'remove_menus');
  * Testado em WP 3.9
  */
 
+function show_message_admin( $message ) {
+	echo '<div id="message" class="error">';
+	echo "<p>$message</p></div>";
+}
+
 function check_plugins() {
 	$m = 'É necessário instalar, ativar e configurar o(s) plugin(s)';
 	if ( !is_plugin_active( 'jetpack/jetpack.php' ) ) {
