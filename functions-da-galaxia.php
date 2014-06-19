@@ -265,3 +265,25 @@ global $menu;
 
 /** Adiciona contagem de anexos nos posts **/
 add_action('admin_menu', 'remove_menus');
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Verifica se um plugin está instalado, caso contrário exibe uma mensagem no admin.
+ * Testado em WP 3.9
+ */
+
+function check_plugins() {
+	$m = 'É necessário instalar, ativar e configurar o(s) plugin(s)';
+	if ( !is_plugin_active( 'jetpack/jetpack.php' ) ) {
+		$m .= ' <a target= \"_blank\" href=\"http://wordpress.org/plugins/jetpack/\">JetPack</a>';
+	}
+	if ( !is_plugin_active( 'login-lockdown/loginlockdown.php' ) ) {
+		$m .= ', <a target= \"_blank\" href=\"https://wordpress.org/plugins/login-lockdown/\">Login LockDown</a>';
+	}
+	$m .= '.';
+	if ( strpos( $m,'target' ) == true ) {
+		show_message_admin( $m );
+	}
+}
+add_action( 'admin_notices', 'check_plugins' );
