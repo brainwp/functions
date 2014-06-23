@@ -305,3 +305,17 @@ if (isset($_GET['activated']) && is_admin()){
 		update_option( 'permalink_structure', '/%postname%/' );
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Desabilita o script HeartBeat no Admin, exceto em post.php e post-new.php.
+ * Esse script faz requisições ajax a cada 15 segundos quando seu admin está aberto.
+ */
+add_action( 'init', 'wp_deregister_heartbeat', 1 );
+function wp_deregister_heartbeat() {
+	global $pagenow;
+
+	if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow )
+		wp_deregister_script('heartbeat');
+}
