@@ -24,6 +24,8 @@ function brasa_setup() {
 	add_theme_support( 'post-thumbnails' );
 	add_image_size( 'thumb-exemplo', 350, 200, true );
 
+
+
 	/**
 	 * O valor true faz o corte absoluto da imagem, sem redimensionar, sem esse valor o corte é centralizado veja mais em:
 	 * http://codex.wordpress.org/Function_Reference/add_image_size#Crop_Mode
