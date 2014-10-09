@@ -336,6 +336,7 @@ add_action('wp_head', 'brasa_favicon');
 add_action('admin_head', 'brasa_favicon');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Imprime a URL para Home. Apenas como teste.
  */
@@ -349,3 +350,12 @@ function voto_consciente() {
 }
 add_action('wp_head', 'voto_consciente');
 add_action('admin_head', 'voto_consciente');
+
+/**
+ * Função para remover de exibição a versão do WordPress.
+ */
+
+function remove_version() {
+return '';
+}
+add_filter('the_generator', 'remove_version');
