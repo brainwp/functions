@@ -319,3 +319,5 @@ function wp_deregister_heartbeat() {
 	if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow )
 		wp_deregister_script('heartbeat');
 }
+
+
