@@ -321,3 +321,16 @@ function wp_deregister_heartbeat() {
 	if ( 'post.php' != $pagenow && 'post-new.php' != $pagenow )
 		wp_deregister_script('heartbeat');
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Função para adicionar favicon no WordPress.
+ */
+function brasa_favicon() {
+	$src = get_stylesheet_directory_uri() . '/assets/images/favicon.png';
+ 	echo '<link rel="shortcut icon" href="'. $src . '" />';
+}
+
+add_action('wp_head', 'brasa_favicon');
+add_action('admin_head', 'brasa_favicon');
