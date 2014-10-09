@@ -334,3 +334,10 @@ function brasa_favicon() {
 
 add_action('wp_head', 'brasa_favicon');
 add_action('admin_head', 'brasa_favicon');
+
+
+function teste(){
+	echo "teste";
+}
+
+}
