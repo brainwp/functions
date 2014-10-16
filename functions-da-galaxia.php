@@ -353,3 +353,14 @@ function remove_version() {
 return '';
 }
 add_filter('the_generator', 'remove_version');
+
+
+/**
+* Função mostra no rodapé qual pagina vc está.
+*/
+add_action('admin_bar_menu', 'show_template');
+function show_template() { 
+global $template;
+print_r($template);
+}
+
