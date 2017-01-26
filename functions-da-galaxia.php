@@ -364,3 +364,21 @@ global $template;
 print_r($template);
 }
 
+/**
+ * Set image size when theme is activated
+ * Testado em WP 4.7.*
+ */
+if ( ! function_exists( 'brasa_theme_activated' ) ) {
+    function brasa_theme_activated() {
+        // set thumbnail size in settings > media
+        update_option( 'thumbnail_size_w', 300 );
+        update_option( 'thumbnail_size_h', 300 );
+        // set medium size in settings > media
+        update_option( 'medium_size_w', 600 );
+        update_option( 'medium_size_h', 600 );
+        // set large size in settings > media
+        update_option( 'large_size_w', 1280 );
+        update_option( 'large_size_h', 1280 );
+    }
+    add_action( 'after_switch_theme', 'brasa_theme_activated' );
+}
