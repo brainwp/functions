@@ -408,38 +408,42 @@ add_action( 'login_enqueue_scripts', 'my_login_logo' );
 
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////   adiciona o nome de uma taxonomia nos campos de busca ////////
-///////////////////////Mudar nome_taxonomia para o nome da sua taxonomia/////////
 //////////////////////////
 
-function busca_tax($query) {
-	if ($query->is_main_query() AND $query->is_search ) {
-		$busca= $query->query['s'];
-		$term = get_term_by('name', $query->query['s'], 'nome_taxonomia');	
-		if ($term) {
-			global $wpdb;
-			$busca=$query->query['s'];
-			$id_termo = $term->term_id;
+function busca_tax( $where, &$wp_query )
+// busca nos nomes dos termos o valor inserido no formulario de busca padrao do wordpress
+// trocar 'fonte pelo CPT e 'tema_fonte' pelo nome da sua taxonomia
 
-			$IDS = $wpdb->get_results('SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id ='.$term->term_id, ARRAY_A);
-			$lista_id = array();
-			foreach ($IDS as $nome => $id) {
-				array_push($lista_id,$id['object_id']);
-			}
-			$sql = 'SELECT ' .$wpdb->posts.'.ID FROM  '.$wpdb->posts.' WHERE  '.$wpdb->posts.'.post_type = "fonte" AND '.$wpdb->posts.'.post_status = "publish" AND ( ' . $wpdb->posts . '.post_title LIKE \'%' . $wpdb->esc_like( $busca ) . '%\'';
-	    	$sql .= ' OR ' . $wpdb->posts . '.post_content LIKE \'%' .$wpdb->esc_like( $busca ) . '%\')
-			UNION
-			SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id ='.$id_termo;
-			$IDS_busca = $wpdb->get_results($sql, ARRAY_A);
-			$lista_id = array();
-			foreach ($IDS_busca as $nome => $id) {
-				array_push($lista_id,$id['ID']);
-			}
-			$query->set('post__in',$lista_id );
-			$query->set('s','' );
-			return $query;
-	    }
-	}
-	
+{
+   		global $wpdb;
+    	global $wp_query;
+   	if (isset($wp_query->query['post_type'])){
+		if ($wp_query->is_main_query() AND $wp_query->is_search AND $wp_query->query['post_type'] == 'fonte' ) {
+			$busca = $_GET['s']; 
+			$where .= " 
+				OR $wpdb->posts.ID 
+				IN (SELECT tr.object_id 
+					FROM $wpdb->term_relationships 
+					AS tr 
+					INNER JOIN $wpdb->term_taxonomy 
+					AS tt 
+					ON tr.term_taxonomy_id = tt.term_taxonomy_id 
+					WHERE tt.taxonomy = 'tema_fonte'  
+					AND tt.term_id 
+					IN (SELECT t.term_id 
+						FROM $wpdb->terms 
+						AS t 
+						WHERE name 
+						LIKE '%$busca%'
+					)
+				)";  
+		return $where;
+
+		}
+		
+	}  
+
+	return $where; 
 }
 
-add_filter('pre_get_posts','busca_tax');
+add_filter( 'posts_where', 'busca_tax', 10, 2 );
