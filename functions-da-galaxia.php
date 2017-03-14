@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * Nas funções abaixo, substitua todos "brasa" pelo nome do tema em desenvolvimento
@@ -389,3 +389,57 @@ if ( ! function_exists( 'brasa_theme_activated' ) ) {
     }
     add_action( 'after_switch_theme', 'brasa_theme_activated' );
 }
+
+/**
+ * Set image size when theme is activated
+ * Testado em WP 4.7.*
+ */
+function my_login_logo() { ?>
+    <style type="text/css">
+        #login h1 a, .login h1 a {
+            background-image: url(<?php echo get_stylesheet_directory_uri(); ?>/assets/images/imagem.png)!important;
+            background-size: contain;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'my_login_logo' );
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////   adiciona o nome de uma taxonomia nos campos de busca ////////
+///////////////////////Mudar nome_taxonomia para o nome da sua taxonomia/////////
+//////////////////////////
+
+function busca_tax($query) {
+	if ($query->is_main_query() AND $query->is_search ) {
+		$busca= $query->query['s'];
+		$term = get_term_by('name', $query->query['s'], 'nome_taxonomia');	
+		if ($term) {
+			global $wpdb;
+			$busca=$query->query['s'];
+			$id_termo = $term->term_id;
+
+			$IDS = $wpdb->get_results('SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id ='.$term->term_id, ARRAY_A);
+			$lista_id = array();
+			foreach ($IDS as $nome => $id) {
+				array_push($lista_id,$id['object_id']);
+			}
+			$sql = 'SELECT ' .$wpdb->posts.'.ID FROM  '.$wpdb->posts.' WHERE  '.$wpdb->posts.'.post_type = "fonte" AND '.$wpdb->posts.'.post_status = "publish" AND ( ' . $wpdb->posts . '.post_title LIKE \'%' . $wpdb->esc_like( $busca ) . '%\'';
+	    	$sql .= ' OR ' . $wpdb->posts . '.post_content LIKE \'%' .$wpdb->esc_like( $busca ) . '%\')
+			UNION
+			SELECT object_id FROM '.$wpdb->term_relationships.' WHERE term_taxonomy_id ='.$id_termo;
+			$IDS_busca = $wpdb->get_results($sql, ARRAY_A);
+			$lista_id = array();
+			foreach ($IDS_busca as $nome => $id) {
+				array_push($lista_id,$id['ID']);
+			}
+			$query->set('post__in',$lista_id );
+			$query->set('s','' );
+			return $query;
+	    }
+	}
+	
+}
+
+add_filter('pre_get_posts','busca_tax');
