@@ -447,3 +447,29 @@ function busca_tax( $where, &$wp_query )
 }
 
 add_filter( 'posts_where', 'busca_tax', 10, 2 );
+
+/**
+ * Pega o titulo do site na url do mesmo (subdomain or path)
+ * Exemplo: 2016.diadograffiti.org - retorna: 2016.
+ * Exemplo 2: diadograffiti.org/2017 - retorn: 2017
+ * @param string $url
+ * @return string
+ */
+function brasa_get_site_title_by_url( $url ) {
+	$title = '';
+	if ( defined( 'SUBDOMAIN_INSTALL' ) ) {
+		if( SUBDOMAIN_INSTALL ) {
+        	$title = explode( '.', $url );
+        	$title = str_replace( array( 'https://', 'http://' ), '', $title[0] );
+		} else {
+			$url = substr_replace( $url, '', -1 );
+			$url = explode( '/', $url );
+			$title = end( $url );
+    	}
+    } else {
+		$url = substr_replace( $url, '', -1 );
+		$url = explode( '/', $url );
+		$title = end( $url );
+    }
+    return $title;
+}
