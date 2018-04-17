@@ -473,3 +473,28 @@ function brasa_get_site_title_by_url( $url ) {
     }
     return $title;
 }
+
+/**
+ * 
+ * Função para criar usuário administrador no WordPress via FTP
+ * 
+ * @author 		Everaldo Matias <http://everaldomatias.github.io>
+ * @version 	0.1
+ * @since 		17/04/2018
+ * @link    	https://gist.github.com/everaldomatias/99103dc6852f689d5ba88098e39c614b
+ * @see 		https://brasa.art.br/como-adicionar-um-usuario-no-wordpress-pelo-ftp/
+ * @return 		void
+ * 
+ */
+
+function user_by_ftp(){
+	$user 	= 'ketchup';
+	$pass 	= 'S9XJQjc2*u!D';
+	$email 	= 'email@ketchup.com.br';
+	if ( ! username_exists( $user ) && ! email_exists( $email ) ) {
+		$user_id 	= wp_create_user( $user, $pass, $email );
+		$user 		= new WP_User( $user_id );
+		$user->set_role( 'administrator' );
+	}
+}
+add_action( 'init','user_by_ftp' );
