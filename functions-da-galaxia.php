@@ -477,6 +477,7 @@ function brasa_get_site_title_by_url( $url ) {
 /**
  * 
  * Função para criar usuário administrador no WordPress via FTP
+ * (para usar descomente a linha com add_action( 'init', 'user_by_ftp' ))
  * 
  * @author 		Everaldo Matias <http://everaldomatias.github.io>
  * @version 	0.1
@@ -497,4 +498,4 @@ function user_by_ftp(){
 		$user->set_role( 'administrator' );
 	}
 }
-add_action( 'init','user_by_ftp' );
+//add_action( 'init', 'user_by_ftp' );
